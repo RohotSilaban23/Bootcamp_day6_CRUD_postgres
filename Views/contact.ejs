@@ -4,12 +4,12 @@
     <table border="3" style="width: 50%;">
         <tr>
             <td>Nama</td>
-            <td>No. Telpon</td>
+            <td>Email</td>
         </tr>
-            <% if(data.length > 0 ){data.forEach(function(dat) { %>
+            <% if(contact.length > 0 ){contact.forEach(function(dat) { %>
                 <tr>
-                    <td><%= dat.nama %></td>
-                    <td><%= dat.noTelpon%></td>
+                    <td><%= dat.name %></td>
+                    <td><%= dat.email%></td>
                 </tr>
                 
             <% })} else {  %>

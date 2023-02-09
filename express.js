@@ -1,15 +1,21 @@
 const express = require('express')
 const expressLayouts = require('express-ejs-layouts')
+const morgan = require('morgan')
+const fs = require('fs')
 const app = express()
 const port = 3000
 
 //untuk menyatakan fungsi engine ejs
 app.set('view engine', 'ejs')
 
+// untuk menggnukan ejs-layout
 app.use(expressLayouts)
 app.set ('layout', './layout/full-width')
 
+
 app.use(express.static('public'))
+
+app.use(morgan('dev'))
 
 app.use((req, res, next) => {
   console.log('Time:', Date.now())
@@ -29,9 +35,11 @@ app.get('/abaut', (req, res) => {
 
 app.get('/contact', (req, res) => {
   // res.send('./conatct.html',{root: __dirname})
-  const data= [{nama : 'Rohot', noTelpon: '082299008023'}]
+  const data = fs.readFileSync('public/contacts.json');
+  const contact = JSON.parse(data);
+  console.log(contact)
   
-  res.render('contact', {data:data, title: 'Halaman Contact'})
+  res.render('contact', {contact, title: 'Halaman Contact'})
 
 
 })
