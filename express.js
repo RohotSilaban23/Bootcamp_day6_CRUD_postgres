@@ -1,24 +1,30 @@
 const express = require('express')
+const expressLayouts = require('express-ejs-layouts')
 const app = express()
 const port = 3000
 
+//untuk menyatakan fungsi engine ejs
 app.set('view engine', 'ejs')
+
+app.use(expressLayouts)
+app.set ('layout', './layout/full-width')
 
 app.get('/', (req, res) => {
   // res.sendFile('./index.html',{root: __dirname})
-  res.render('index')
+  res.render('index',  {title: 'Halaman index'})
 })
 
 app.get('/abaut', (req, res) => {
   // res.send('./abaut.html',{root: __dirname})
-  res.render('abaut')
+  res.render('abaut',  {title: 'Halaman About'})
 })
 
 app.get('/contact', (req, res) => {
   // res.send('./conatct.html',{root: __dirname})
   const data= [{nama : 'Rohot', noTelpon: '082299008023'}]
   
-  res.render('contact', {data:data})
+  res.render('contact', {data:data, title: 'Halaman Contact'})
+
 
 })
 
