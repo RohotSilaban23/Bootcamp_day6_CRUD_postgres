@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+</head>
+<body>
+    <h3>Links</h3>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/abaut">About</a></li>
+        <li><a href="/contact">contact</a></li>
+    </ul>
+
+    <h3>Tabel Contact</h3>
+    <table border="1" style="width: 50%;">
+        <tr>
+            <td>Nama</td>
+            <td>No. Telpon</td>
+        </tr>
+            <% if(data.length > 0 ){data.forEach(function(dat) { %>
+                <tr>
+                    <td><%= dat.nama %></td>
+                    <td><%= dat.noTelpon%></td>
+                </tr>
+                
+            <% })} else {  %>
+                <tr>
+                    <td colspan="2">data Not Found</td>
+                </tr>
+         <%   }; %>
+    </table>
+
+    <h1>Web server Node JS</h1>
+    <p>welcome to My Page</p>
+</body>
+</html>
