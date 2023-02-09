@@ -9,6 +9,13 @@ app.set('view engine', 'ejs')
 app.use(expressLayouts)
 app.set ('layout', './layout/full-width')
 
+app.use(express.static('public'))
+
+app.use((req, res, next) => {
+  console.log('Time:', Date.now())
+  next()
+})
+
 app.get('/', (req, res) => {
   // res.sendFile('./index.html',{root: __dirname})
   res.render('index',  {title: 'Halaman index'})
@@ -17,6 +24,7 @@ app.get('/', (req, res) => {
 app.get('/abaut', (req, res) => {
   // res.send('./abaut.html',{root: __dirname})
   res.render('abaut',  {title: 'Halaman About'})
+
 })
 
 app.get('/contact', (req, res) => {
