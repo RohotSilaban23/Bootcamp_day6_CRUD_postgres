@@ -9,9 +9,12 @@
   "author": "rohot",
   "license": "ISC",
   "dependencies": {
+    "body-parse": "^0.1.0",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-ejs-layouts": "^2.5.1",
+    "express-flash-message": "^2.1.0",
+    "express-validator": "^6.14.3",
     "morgan": "^1.10.0"
   }
 }

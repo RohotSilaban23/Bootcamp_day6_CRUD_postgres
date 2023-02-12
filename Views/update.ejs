@@ -1,0 +1,25 @@
+<h3 class="text-center">Ubah Data Contact</h3>
+
+<div class="container" >
+    <div class="d-flex justify-content-center">
+      <% data.forEach(function(dat) {  %>
+<form action="/contact/edit/<%= dat.name %>" method="post" style="width: 600px;">
+        <div class="mb-3">
+            <label for="name" class="form-label">name</label>
+            <input type="text" class="form-control" id="name"  name="name"  value="<%= dat.name %>">
+          </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" value="<%= dat.email %>">
+          </div>
+          <div class="mb-3">
+            <label for="mobike" class="form-label">No. Telpon</label>
+            <input type="text" class="form-control" id="mobile" name="mobile" value="<%= dat.mobile %>">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    <% }) %>
+
+
+</div>
+</div>

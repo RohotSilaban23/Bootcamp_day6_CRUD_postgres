@@ -1,20 +1,35 @@
+<% if(typeof succes != 'undefined'){%>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <%= msg  %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
 
+    <h3 class="text-center">Tabel Contact List</h3>
 
-    <h3>Tabel Contact</h3>
-    <table border="3" style="width: 50%;">
+    <a href="/contact/tambah" class="btn btn-success">Tambah Data</a>
+    <table class="table">
         <tr>
+            <td>no</td>
             <td>Nama</td>
-            <td>Email</td>
+            <td>No.telpon</td>
+            <td colspan="3">Action</td>
         </tr>
-            <% if(contact.length > 0 ){contact.forEach(function(dat) { %>
+            <% if(data.length > 0 ){data.forEach(function(dat, i) { %>
+                <form action=" " method="post">
                 <tr>
-                    <td><%= dat.name %></td>
-                    <td><%= dat.email%></td>
+                    <td ><%= i+1 %></td>
+                    <td ><%= dat.name %></td>
+                    <td ><%= dat.mobile%></td>
+                    <td ><a href="contact/detail/<%= dat.name %>" class="btn btn-secondary">Detail</a></td>
+                    <td ><a href="contact/edit/<%= dat.name %>" class="btn btn-warning" >edit</a></td>
+                    <td ><a href="contact/delete/<%= dat.name %>" class="btn btn-danger" onclick="alert('apakah anda yakin??')" >Delete</a></td>
                 </tr>
-                
+            </form>
+ 
             <% })} else {  %>
                 <tr>
-                    <td colspan="2">data Not Found</td>
+                    <td colspan="5">data Not Found</td>
                 </tr>
          <%   }; %>
     </table>
