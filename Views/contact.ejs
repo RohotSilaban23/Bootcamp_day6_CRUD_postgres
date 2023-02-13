@@ -1,16 +1,16 @@
 
     <% if(msg == 'add'){%>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <div class="alert alert-success" role="alert">
           Contact succes add
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <% } else if( msg == 'edit'){%>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <div class="alert alert-success" role="alert">
           Contact Succes edit
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
      <% }else if( msg == 'delete'){%>
-         <div class="alert alert-warning alert-dismissible fade show" role="alert">
+         <div class="alert alert-success" role="alert">
             Contact Succes delete
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -24,8 +24,10 @@
 </div>
 
     <h3 class="text-center">Tabel Contact List</h3>
-
-    <a href="/contact/tambah" class="btn btn-success">Tambah Data</a>
+   
+        <a href="/contact/tambah" class="btn btn-success" class="ml-3"><i class="fa-solid fa-user-plus">Adds Contacts</i></a>
+    
+    
     <table class="table">
         <tr>
             <td>no</td>
@@ -39,9 +41,11 @@
                     <td ><%= i+1 %></td>
                     <td ><%= dat.name %></td>
                     <td ><%= dat.mobile%></td>
-                    <td ><a href="/contact/detail/<%= dat.name %>" class="btn btn-secondary">Detail</a></td>
-                    <td ><a href="/contact/edit/<%= dat.name %>" class="btn btn-warning" >edit</a></td>
-                    <td ><a href="/contact/delete/<%= dat.name %>" class="btn btn-danger" onclick="alert('apakah anda yakin??')" >Delete</a></td>
+                    <div class="flex row justify-content-center">
+                    <td ><a href="/contact/detail/<%= dat.name %>" class="btn btn-secondary"><i class="fa-solid fa-eye"></i></a></td>
+                    <td ><a href="/contact/edit/<%= dat.name %>" class="btn btn-warning" ><i class="fa-solid fa-file-pen"></i></a></td>
+                    <td ><a href="/contact/delete/<%= dat.name %>" class="btn btn-danger" onclick="alert('apakah anda yakin??')" ><i class="fa-solid fa-trash"></i></a></td>
+                    </div>
                 </tr>
             </form>
  

@@ -1,6 +1,6 @@
 const express = require('express')
 const expressLayouts = require('express-ejs-layouts')
-const {body, check } = require('express-validator')
+const {body, check, validationResult } = require('express-validator')
 const morgan = require('morgan')
 const fs = require('fs')
 const { name } = require('ejs')
@@ -8,7 +8,10 @@ var router = express.Router()
 const validate = require('validator')
 var bodyParser = require('body-parser')
 const app = express()
+const pool = require('./db')
+const db = require('./query')
 const port = 3000
+
 
 // app.use(express.json())
 //untuk menyatakan fungsi engine ejs
@@ -18,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(bodyParser.json())
 
+app.use(express.json())
 
 // untuk menggnukan ejs-layout
 app.use(expressLayouts)
@@ -35,6 +39,21 @@ app.use((req, res, next) => {
   next()
 })
 
+app.get("/adasync", async(req ,res)=> {
+  try{
+    const name = 'rohot2'
+    const mobile = '082299008023'
+    const email = 'rohot@gmail.com'
+    const newCont = await pool.query(`INSERT INTO contacts(
+      name, email, mobile)
+      VALUES ('${name}', '${email}', '${mobile}') RETURNING *`)
+    res.json(newCont)
+  } catch (err) {
+    console.error(err.message)
+  }
+})
+
+
 app.get('/', (req, res) => {
   // res.sendFile('./index.html',{root: __dirname})
   res.render('index',  {title: 'Halaman index'})
@@ -46,60 +65,16 @@ app.get('/abaut', (req, res) => {
 
 })
 
-app.get('/contact', (req, res) => {
+app.get('/contact', async(req, res) => {
   // res.send('./conatct.html',{root: __dirname})
-  const data = getcontact()
+  const data = await pool.query(`SELECT name , mobile FROM contacts`)
+  console.log(data)
   
-  res.render('contact', {data, title: 'Halaman Contact', msg : req.query.succes})
+  res.render('contact', {data : data.rows, title: 'Halaman Contact', msg : req.query.succes})
 
 })
 
-const updateContact = (contactBaru) => {
-  const contacts = getcontact();
-  console.log(contactBaru)
 
-  const filteredContacts = contacts.filter((contact) => contactBaru.name !== contact.name);
-  console.log(filteredContacts);
-  const cekname = filteredContacts.find((date) => contactBaru.name == date.name)
-  if(cekname){
-    return res.status(401).send({error:true, msg:'data does not exist'})
-  }
-  filteredContacts.push(contactBaru);
-  saveContact(filteredContacts);
-};
-const folder = './data'
-const filepath = "./data/database.json";
-
-if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder)
-}
-if (!fs.existsSync(filepath)) {
-    fs.writeFileSync(filepath, '[]')
-}
-
-const saveContact = (data) => {
-        const hasil = JSON.stringify(data)
-        console.log(hasil)
-        fs.writeFileSync('data/database.json', hasil)
-    }
-
-const getcontact= () => {
-        const jsonData = fs.readFileSync('data/database.json')
-        return JSON.parse(jsonData)    
-    }
-        
-
-const cekContact = (name) => {
-        const contacts = getcontact();
-        return contacts.find((contact) => contact.name.toLowerCase() === name.toLowerCase());
-    };
-
-const findContact = (name) => {
-        const contacts = getcontact();
-        // console.log(nama)
-        const contact = contacts.find((contact) => contact.name.toLowerCase() === name.toLowerCase());
-        return contact;
-    };
 
 
 
@@ -107,85 +82,102 @@ const findContact = (name) => {
 //   res.render('create', { title: 'Halaman Tambah Contact'})
 // })
 
-app.get('/contact/detail/:name', function(req, res) {
-  const data = findContact(req.params.name)
+app.get('/contact/detail/:name', async(req, res) =>{
+   const data = await pool.query(`SELECT name , mobile, email FROM contacts WHERE name ='${req.params.name}'`)
   console.log(data)
-  res.render('ditail', {data, title: 'Halaman detail Contact'})
+  res.render('ditail', {data: data.rows, title: 'Halaman detail Contact'})
 })
 
 app.get('/contact/tambah', function(req, res) {
-  res.render('create', { title: 'Halaman Tambah Contact', msg: req.query.err})
+  res.render('create', { title: 'Halaman Tambah Contact', name : "", email : "", mobile: ""})
 })
 
+app.post('/contact/tambah',[
+  body('name').custom(async(value) =>{
+    const data = await db.findOne(value);
+    console.log(data)
+    if(data){
+      throw new Error('Contact name axists')
+    }
+    return true
+  }),
+  check('email', 'Email not valid').isEmail(),
+  check('mobile', 'Mobile not Valid').isMobilePhone('id-ID')
+], (req, res) =>{
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    console.log((errors));
+    res.render('create', { 
+    title: 'Halaman Tambah Contact',
+    name : req.body.name,
+    email : req.body.email,
+    mobile : req.body.mobile, 
+    errors: errors.array()})
+  } else {
+    const data1 = req.body
+    console.log(data1);
+    const userData = JSON.stringify(data1)
+    datass = JSON.parse(userData)
+    const hasil = db.addContact(datass)
+    res.redirect('/contact')
+  }
 
-app.post('/contact/tambah', function(req, res) {
-      const data = getcontact()
-      const data1 = JSON.stringify(req.body)
-      console.log(data1)
-      const contact = JSON.parse(data1)
-      console.log(contact);
-      const sama = data.find((name) => name.name == contact.name)
-        console.log(sama, 'cek')
-        
-      if(sama){
-        res.redirect('/contact/tambah/?err=01')
-        return false
-      }
-      if(!validate.isMobilePhone(contact.mobile, 'id-ID')) {
-        res.redirect('/contact/tambah/?err=02')
-        return false
-      }
-
-      data.push(contact)
-      saveContact(data);
-      
-      // res.send('./conatct.html',{root: __dirname})
-      // res.render('contact', {data, succes : 1, title : 'Halaman Contact', msg:'Contact added successfully '})
-      res.redirect('/contact/?succes=add')
-    })
-
-
-    app.get('/contact/delete/:name', function(req, res) {
-        const nama = req.params.name
-        const data = getcontact()
-
-        const cek = data.filter(user => user.name.toLowerCase() !== nama.toLowerCase())
-        if(data.length === cek.length) {
-          res.redirect('/contact/?err=delete')
-        } 
-        saveContact(cek)
+})
+    app.get('/contact/delete/:name', async(req, res) =>{
+      try {
+        const name = req.params.name
+        await pool.query(`DELETE FROM contacts WHERE name='${name}'`)
         res.redirect('/contact/?succces=delete')
+      } catch (error) {
+        console.error(err.message)
+      }
+        
       })
 
-app.get('/contact/edit/:name', function(req, res) {
+app.get('/contact/edit/:name', async(req, res)=> {
     // res.send('./conatct.html',{root: __dirname})
-    const name = req.params.name
-    const hasil = findContact(name);
-    let data =[]
-    data.push(hasil)
-    console.log(data);
-    res.render('update', { title: 'Halaman Ubah Contact', data})
+    console.log('aa',req.params.name);
+    try {
+      const db = (await pool.query(`SELECT * FROM contacts WHERE name ='${req.params.name}'`)).rows
+      res.render('update', { title: 'Halaman Ubah Contact', data: db, msg : req.query.err})
+    } catch (error) {
+      console.error(err.message)
+    }
+  
       })
 
-app.post('/contact/edit/:oldname', (req, res) => {
-    console.log(req.body)
-    const u = req.body
-    const cek = cekContact(u.name)
-    console.log(u.name)
-    // if(req.params.name = u.neme){
-    //   updateContact(u)
-    //   res.redirect('/contact/?succes=2')
-    // }
-    updateContact(u)
-    res.redirect('/contact/?succes=edit')
-    
-//     res.render('contact', { title: 'Halaman Ubah Contact'})
-    })
+app.post('/contact/edit/:oldname',[
+  body('name').custom(async(value, { req }) => {
+    const data = await db.findOne(value);
+    const duplikat = data
+    if (value !== req.params.oldname && data) {
+        throw new Error('Contact Name Already axist!');
+    }
+    return true;
+    }),
+  check('email', 'Email not valid').isEmail(),
+  check('mobile', 'Mobile not Valid').isMobilePhone('id-ID')
+], async(req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    console.log('b',errors);
+    res.render('update', { 
+    title: 'Halaman Ubah Contact',
+    oldname : req.params.oldname,
+    data : [{name : req.body.name ,email : req.body.email, mobile : req.body.mobile }],
+    errors: errors.array()})
+  } else {
+      await db.UpdateContact(req.params.oldname, req.body.name, req.body.email, req.body.mobile );
+      
+    res.redirect('/contact')
+    }
+  })
 
 app.use('/', (req, res) => {
   res.status(404)
   res.send('Page not Fount: 404')
 })
+
 
 
 app.listen(port, () => {

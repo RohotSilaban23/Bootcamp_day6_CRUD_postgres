@@ -1,12 +1,12 @@
-<h2 class="text-center">Contact Ditail</h2>
+<h1 class="text-center">Contact Ditail</h1>
 
 <% console.log(data) %>
 
-<% if(data != null ){  %>
+<% if(data[0] != null ){  %>
     
-    <h4 class="text-center"><%= data.name%></h4>
-    <p class="text-center"><%= data.email%></p>
-    <p class="text-center"><%= data.mobile%></p>
+    <h3 class="text-center"><%= data[0].name%></h3>
+    <h4 class="text-center"><%= data[0].email%></h4>
+    <h5 class="text-center"><%= data[0].mobile%></5>
     
  <% } else {  %>
     <h4 class="text-center">Ditail Contact Tidak ada</h4>

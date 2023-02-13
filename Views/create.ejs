@@ -1,14 +1,13 @@
-<% if(msg == '01'){%>
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    Contact already exist
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-<% } else if( msg == '02'){%>
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    Nuber Format Contact is wrong
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-<% } %>
+<div class="container">
+  <% if(typeof errors != 'undefined') { %>
+      <div class="alert alert-danger" role="alert">
+        <ul>
+          <% errors.forEach(error => { %>
+          <li><%= error.msg %></li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
 
 <h3 class="text-center">Tambah Data Contact</h3>
 
@@ -17,15 +16,15 @@
 <form action="/contact/tambah" method="post"  style="width: 600px;">
         <div class="mb-3">
             <label for="name" class="form-label">name</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" class="form-control" id="name" name="name" value="<%= name %>">
           </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="text" class="form-control" id="email" name="email" value="<%= email %>">
           </div>
           <div class="mb-3">
             <label for="mobile" class="form-label">No. Telpon</label>
-            <input type="text" class="form-control" id="mobile" name="mobile" required>
+            <input type="text" class="form-control" id="mobile" name="mobile" value="<%= mobile  %>">
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
 </form>

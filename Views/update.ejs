@@ -1,3 +1,14 @@
+<div class="container">
+  <% if(typeof errors != 'undefined') { %>
+      <div class="alert alert-danger" role="alert">
+        <ul>
+          <% errors.forEach(error => { %>
+          <li><%= error.msg %></li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
+      
 <h3 class="text-center">Ubah Data Contact</h3>
 
 <div class="container" >
