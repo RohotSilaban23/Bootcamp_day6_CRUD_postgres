@@ -117,6 +117,7 @@ app.get('/contact/tambah', function(req, res) {
   res.render('create', { title: 'Halaman Tambah Contact', msg: req.query.err})
 })
 
+
 app.post('/contact/tambah', function(req, res) {
       const data = getcontact()
       const data1 = JSON.stringify(req.body)
@@ -125,12 +126,13 @@ app.post('/contact/tambah', function(req, res) {
       console.log(contact);
       const sama = data.find((name) => name.name == contact.name)
         console.log(sama, 'cek')
+        
       if(sama){
-        res.render('create', {err : 1, title : 'Halaman Tambah Contact', msg:'Contact already exist'})
+        res.redirect('/contact/tambah/?err=01')
         return false
       }
       if(!validate.isMobilePhone(contact.mobile, 'id-ID')) {
-        res.render('create', {err : 1, title : 'Halaman Tambah Contact', msg:'Fortmat Number Contact is wrong'})
+        res.redirect('/contact/tambah/?err=02')
         return false
       }
 
@@ -138,7 +140,8 @@ app.post('/contact/tambah', function(req, res) {
       saveContact(data);
       
       // res.send('./conatct.html',{root: __dirname})
-      res.render('contact', {data, succes : 1, title : 'Halaman Contact', msg:'Contact added successfully '})
+      // res.render('contact', {data, succes : 1, title : 'Halaman Contact', msg:'Contact added successfully '})
+      res.redirect('/contact/?succes=add')
     })
 
 
@@ -148,10 +151,10 @@ app.post('/contact/tambah', function(req, res) {
 
         const cek = data.filter(user => user.name.toLowerCase() !== nama.toLowerCase())
         if(data.length === cek.length) {
-          res.render('contact', {data, succes : 1, title : 'Halaman Contact', msg:'Contact failed to delete '})
+          res.redirect('/contact/?err=delete')
         } 
         saveContact(cek)
-        res.render('contact', {data, succes : 1, title : 'Halaman Contact', msg:'Contact  to delete '})
+        res.redirect('/contact/?succces=delete')
       })
 
 app.get('/contact/edit/:name', function(req, res) {
@@ -169,12 +172,12 @@ app.post('/contact/edit/:oldname', (req, res) => {
     const u = req.body
     const cek = cekContact(u.name)
     console.log(u.name)
-    if(req.params.name = u.neme){
-      updateContact(u)
-      res.redirect('/contact/?succes=2')
-    }
+    // if(req.params.name = u.neme){
+    //   updateContact(u)
+    //   res.redirect('/contact/?succes=2')
+    // }
     updateContact(u)
-    res.redirect('/contact')
+    res.redirect('/contact/?succes=edit')
     
 //     res.render('contact', { title: 'Halaman Ubah Contact'})
     })

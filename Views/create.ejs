@@ -1,6 +1,11 @@
-<% if(typeof err != 'undefined'){%>
+<% if(msg == '01'){%>
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <%= msg  %>
+    Contact already exist
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } else if( msg == '02'){%>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    Nuber Format Contact is wrong
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 <% } %>

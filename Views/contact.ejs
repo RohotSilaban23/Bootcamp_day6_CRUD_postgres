@@ -1,9 +1,27 @@
-<% if(typeof succes != 'undefined'){%>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <%= msg  %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% } %>
+
+    <% if(msg == 'add'){%>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          Contact succes add
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } else if( msg == 'edit'){%>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          Contact Succes edit
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+     <% }else if( msg == 'delete'){%>
+         <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Contact Succes delete
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+
+<div class="text-center">
+    <% const name = "Rohot M.T. Silaban"%>
+    <h1>Web server Node JS</h1>
+    <p>welcome to My Page <%= name%></p>
+</div>
 
     <h3 class="text-center">Tabel Contact List</h3>
 
@@ -21,9 +39,9 @@
                     <td ><%= i+1 %></td>
                     <td ><%= dat.name %></td>
                     <td ><%= dat.mobile%></td>
-                    <td ><a href="contact/detail/<%= dat.name %>" class="btn btn-secondary">Detail</a></td>
-                    <td ><a href="contact/edit/<%= dat.name %>" class="btn btn-warning" >edit</a></td>
-                    <td ><a href="contact/delete/<%= dat.name %>" class="btn btn-danger" onclick="alert('apakah anda yakin??')" >Delete</a></td>
+                    <td ><a href="/contact/detail/<%= dat.name %>" class="btn btn-secondary">Detail</a></td>
+                    <td ><a href="/contact/edit/<%= dat.name %>" class="btn btn-warning" >edit</a></td>
+                    <td ><a href="/contact/delete/<%= dat.name %>" class="btn btn-danger" onclick="alert('apakah anda yakin??')" >Delete</a></td>
                 </tr>
             </form>
  
@@ -34,8 +52,6 @@
          <%   }; %>
     </table>
 
-    <% const name = "Rohot M.T. Silaban"%>
-    <h1>Web server Node JS</h1>
-    <p>welcome to My Page <%= name%></p>
+   
 
 
